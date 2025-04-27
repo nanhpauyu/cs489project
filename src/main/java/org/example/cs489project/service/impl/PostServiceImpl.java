@@ -11,7 +11,6 @@ import org.example.cs489project.model.user.User;
 import org.example.cs489project.repository.PostRepository;
 import org.example.cs489project.repository.UserRepository;
 import org.example.cs489project.service.PostService;
-import org.example.cs489project.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

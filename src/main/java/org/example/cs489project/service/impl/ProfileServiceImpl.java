@@ -8,7 +8,7 @@ import org.example.cs489project.exception.custom.UsernameNotFoundException;
 import org.example.cs489project.mapper.ProfileMapper;
 import org.example.cs489project.model.Profile;
 import org.example.cs489project.model.user.User;
-import org.example.cs489project.repository.ProfileRespository;
+import org.example.cs489project.repository.ProfileRepository;
 import org.example.cs489project.repository.UserRepository;
 import org.example.cs489project.service.ProfileService;
 import org.springframework.data.domain.Page;
@@ -17,13 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
-    private final ProfileRespository profileRespository;
+    private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
     private final UserRepository userRepository;
 
@@ -33,7 +32,7 @@ public class ProfileServiceImpl implements ProfileService {
         String username = profile.getUser().getUsername();
         User user = getUserByUsername(username);
         profile.setUser(user);
-        profileRespository.save(profile);
+        profileRepository.save(profile);
         return profileMapper.profileToProfileResponseDto(profile);
     }
 
@@ -44,13 +43,13 @@ public class ProfileServiceImpl implements ProfileService {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
-            Optional<Profile> optionalProfile = profileRespository.findProfileByUser_Id(existingUser.getId());
+            Optional<Profile> optionalProfile = profileRepository.findProfileByUser_Id(existingUser.getId());
             if (optionalProfile.isPresent()) {
                 Profile existingProfile = optionalProfile.get();
                 mappedProfile.getUser().setId(existingUser.getId());
                 mappedProfile.setId(existingProfile.getId());
             }
-            Profile updatedProfile = profileRespository.save(mappedProfile);
+            Profile updatedProfile = profileRepository.save(mappedProfile);
             return profileMapper.profileToProfileResponseDto(updatedProfile);
         }
         throw new UsernameNotFoundException(username + " not found");
@@ -58,7 +57,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileResponseDto findProfileByUsername(String username) {
-        Profile profile = profileRespository.findProfileByUser_Id(getUserByUsername(username).getId()).get();
+        Profile profile = profileRepository.findProfileByUser_Id(getUserByUsername(username).getId()).get();
         return profileMapper.profileToProfileResponseDto(profile);
     }
 
@@ -78,6 +77,6 @@ public class ProfileServiceImpl implements ProfileService {
                 Sort.Direction.fromString(sortDirection),
                 sortBy
         );
-        return profileRespository.findAll(pageable).map(profileMapper::profileToProfileResponseDto);
+        return profileRepository.findAll(pageable).map(profileMapper::profileToProfileResponseDto);
     }
 }

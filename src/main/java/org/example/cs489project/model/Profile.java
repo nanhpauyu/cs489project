@@ -38,7 +38,7 @@ public class Profile {
     @Column(length = 1000)
     private String bio;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 

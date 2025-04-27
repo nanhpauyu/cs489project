@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
     private final JwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final CustomCorsConfiguration customCorsConfiguration;
 
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,7 +41,7 @@ public class SecurityConfiguration {
                         req -> req.requestMatchers("/api/v1/auth/*").permitAll()
                                 .requestMatchers("/api/v1/management/**").hasAnyRole(Role.ADMIN.name(), Role.MEMBER.name())
                                 .anyRequest().authenticated()
-                )
+                ).cors(c->c.configurationSource(customCorsConfiguration))
                 //we do not want Spring security context to store anything related with session
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

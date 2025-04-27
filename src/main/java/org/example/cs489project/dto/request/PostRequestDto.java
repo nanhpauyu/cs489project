@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public record PostRequestDto(
         String content,
+        // at
         UserRequestDto user,
         LocalDate date
 ) {
